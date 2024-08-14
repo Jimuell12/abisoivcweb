@@ -61,7 +61,7 @@ export default function Abiso() {
 
   return (
 <div className='grid lg:grid-cols-2 gap-6 p-4 h-screen'>
-  <div className='lg:col-span-1 bg-white p-6 rounded-lg shadow-md justify-center'>
+  <div className='lg:col-span-1 bg-white p-6 rounded-lg drop-shadow-md justify-center'>
     <h2 className='text-xl font-semibold mb-4'>Send Message to Users</h2>
     <form onSubmit={handleSubmit} className='flex flex-col'>
       <label htmlFor='Ipaddress' className='mb-2 font-medium text-gray-700'>IP Address:</label>
@@ -91,7 +91,7 @@ export default function Abiso() {
     <p className='text-gray-600 mt-4'>{responseMessage}</p>
   </div>
 
-  <div className='lg:col-span-1 bg-white p-6 rounded-lg shadow-md'>
+  <div className='lg:col-span-1 bg-white p-6 rounded-lg drop-shadow-md'>
     <h2 className='text-2xl font-semibold mb-4'>How to Use the REST SMS Android App</h2>
     <p className='mb-4 text-gray-700'>
       This page allows you to send messages to all registered users through the REST SMS Android app. Follow the steps below to use the app effectively:

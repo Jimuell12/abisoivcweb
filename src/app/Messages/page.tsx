@@ -11,7 +11,7 @@ export default function Messages() {
   const [newMessage, setNewMessage] = useState<string>('');
   const messageRef = React.useRef<HTMLDivElement>(null);
 
-  const handleImageChange = (e:any ) => {
+  const handleImageChange = (e: any) => {
     const file = e.target.files[0];
     if (file) {
       sendImage(file);
@@ -95,7 +95,7 @@ export default function Messages() {
       }
     }
   };
-  
+
   const handleKeyPress = (event: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === 'Enter' && !event.shiftKey) {
       sendMessage();
@@ -103,29 +103,35 @@ export default function Messages() {
   };
 
   return (
-    <div className='grid lg:grid-cols-6 h-screen bg-white'>
-      <div className='lg:col-span-4 relative border border-gray-200'>
-        <div className='flex flex-col h-screen bg-white'>
+    <div className='grid lg:grid-cols-6 h-screen '>
+      <div className='lg:col-span-4 relative border-r border-gray-200'>
+        <div className='flex flex-col h-screen'>
           <div ref={messageRef} className='flex-1 p-4 overflow-y-scroll'>
-            {messages.map((msg) => (
-              <div
-                key={msg.id}
-                className={`flex ${msg.userType === 'rescuer' ? 'justify-end' : 'justify-start'} mb-4`}
-              >
-                <div
-                  className={`p-3 max-w-[75%] rounded-lg ${msg.userType === 'rescuer' ? 'bg-blue-500 text-white' : 'bg-gray-300 text-black'}`}
-                >
-                  {msg.type === 'text' ? (
-                    <p>{msg.text}</p>
-                  ) : msg.type === 'image' ? (
-                    <img src={msg.text} alt="message" className='max-w-xs max-h-[300px] rounded-lg' />
-                  ) : null}
-                  <small className='block text-right text-xs'>{new Date(msg.timestamp).toLocaleTimeString()}</small>
-                </div>
+            {messages.length === 0 ? (
+              <div className='flex items-center justify-center h-full'>
+                <p className='text-gray-500 text-center'>Click the Message on the left. Start the conversation!</p>
               </div>
-            ))}
+            ) : (
+              messages.map((msg) => (
+                <div
+                  key={msg.id}
+                  className={`flex ${msg.userType === 'rescuer' ? 'justify-end' : 'justify-start'} mb-4`}
+                >
+                  <div
+                    className={`p-3 max-w-[75%] rounded-lg ${msg.userType === 'rescuer' ? 'bg-blue-500 text-white' : 'bg-gray-300 text-black'}`}
+                  >
+                    {msg.type === 'text' ? (
+                      <span className='text-wrap whitespace-pre-line'>{msg.text}</span>
+                    ) : msg.type === 'image' ? (
+                      <img src={msg.text} alt="message" className='max-w-xs max-h-[300px] rounded-lg' />
+                    ) : null}
+                    <small className='block text-right text-xs'>{new Date(msg.timestamp).toLocaleTimeString()}</small>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
-          <div className='flex items-center p-2 border-t border-gray-200 bg-white'>
+          <div className='flex items-center p-2 border-t border-gray-200'>
             <label htmlFor="file-upload" className='cursor-pointer'>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-8">
                 <path fillRule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V9Z" clipRule="evenodd" />
