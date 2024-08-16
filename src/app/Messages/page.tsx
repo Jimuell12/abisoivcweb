@@ -55,7 +55,7 @@ export default function Messages() {
 
   const sendMessage = () => {
     if (currentChatId && newMessage) {
-      // Send message to database
+      
       const newMessageRef = ref(db, `incidents/${currentChatId}/messages`)
       push(newMessageRef, {
         text: newMessage,
@@ -76,11 +76,9 @@ export default function Messages() {
       const imageRef = storageRef(storage, `images/${filename}`);
 
       try {
-        // Upload image
         const snapshot = await uploadBytes(imageRef, file);
         const downloadURL = await getDownloadURL(snapshot.ref);
 
-        // Save message with image URL
         if (currentChatId) {
           const newMessageRef = ref(db, `incidents/${currentChatId}/messages`);
           await push(newMessageRef, {
@@ -151,7 +149,7 @@ export default function Messages() {
       </div>
       <div className='lg:col-span-2'>
         <h1 className='font-bold text-3xl px-4 py-2'>Chats</h1>
-        <Chatlist onUserClick={handleUserClick} />
+        <Chatlist onIncidentClick={handleUserClick} />
       </div>
     </div>
   )

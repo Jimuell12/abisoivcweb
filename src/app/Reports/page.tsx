@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts'
 import { db } from '../firebaseConfig'
 
+
 export default function Settings() {
   const [incidentsList, setIncidentsList] = useState<any[]>([]);
   const [monthlyIncidents, setMonthlyIncidents] = useState<any[]>([]);
@@ -38,7 +39,6 @@ export default function Settings() {
     };
   }, []);
 
-  // Group incidents by type and date, and count them
   const groupedIncidents = incidentsList.reduce((acc, incident) => {
     const date = new Date(incident.timestamp).toLocaleDateString('en', { year: 'numeric' });
     if (!acc[incident.type]) {
@@ -47,11 +47,10 @@ export default function Settings() {
     if (!acc[incident.type][date]) {
       acc[incident.type][date] = 0;
     }
-    acc[incident.type][date] += 1; // Increment count for the day
+    acc[incident.type][date] += 1;
     return acc;
   }, {});
 
-  // Convert grouped incidents to an array format suitable for the LineChart
   const prepareChartData = (groupedData: any) => {
     const chartData: any = {};
     Object.keys(groupedData).forEach(type => {
@@ -62,8 +61,8 @@ export default function Settings() {
     });
     return chartData;
   };
-
-  const chartData = prepareChartData(groupedIncidents);
+  
+  const chartData: any[] = prepareChartData(groupedIncidents);
 
   const handleDateSelected = (e: any) => {
     const date = e.target.value;

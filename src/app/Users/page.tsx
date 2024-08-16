@@ -8,7 +8,7 @@ export default function Users() {
   const [users, setUsers] = useState<any[]>([]);
   const [openMenuId, setOpenMenuId] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedRole, setSelectedRole] = useState<string | null>(null); // State for selected role
+  const [selectedRole, setSelectedRole] = useState<string | null>(null);
 
   useEffect(() => {
     const usersRef = ref(db, 'users/')
@@ -36,7 +36,7 @@ export default function Users() {
   const handleRoleChange = (id: string, newRole: string) => {
     const userRef = ref(db, `users/${id}`);
     update(userRef, {role: newRole});
-    setOpenMenuId(null); // Close the menu after selection
+    setOpenMenuId(null);
   };
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -84,8 +84,8 @@ export default function Users() {
         </div>
       </div>
       <div className='overflow-x-auto max-h-[70vh]'>
-        <table className="min-w-full">
-          <thead className="bg-gray-50 whitespace-nowrap rounded-xl">
+        <table className="min-w-full rounded-2xl overflow-hidden">
+          <thead className="bg-gray-50 whitespace-nowrap">
             <tr>
               <th className="p-4 text-left text-sm font-bold text-gray-500">User name</th>
               <th className="p-4 text-left text-sm font-bold text-gray-500">Mobile No.</th>
@@ -97,7 +97,7 @@ export default function Users() {
           </thead>
           <tbody className="whitespace-nowrap">
             {filteredUsers.map((user: any) => (
-              <tr className='hover:bg-gray-50'>
+              <tr key={user.id} className='hover:bg-gray-50'>
                 <th className="p-4 text-sm">
                   <div
                     className="p-2 flex items-center"
@@ -142,13 +142,7 @@ export default function Users() {
                     </svg>
                   </button>
                   {openMenuId === user.id && (
-                    <div className="absolute right-0 mt-2 bg-white border rounded-lg shadow-lg z-10">
-                      <button
-                        className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
-                        onClick={() => handleRoleChange(user.id, "admin")}
-                      >
-                        to Admin
-                      </button>
+                    <div className="absolute top-0 right-5 bg-white border rounded-lg shadow-lg z-10">
                       <button
                         className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
                         onClick={() => handleRoleChange(user.id, "user")}

@@ -48,10 +48,9 @@ export default function Abiso() {
           'Content-Type': 'application/x-www-form-urlencoded',
         },
         body: formData.toString(),
-        mode: 'no-cors', // Use this workaround for CORS during development
+        mode: 'no-cors',
       });
 
-      // Since `mode: 'no-cors'` results in an opaque response, you won't be able to read the response body
       setResponseMessage('Request sent successfully (no response available due to CORS).');
     } catch (error) {
       console.error('Error:', error);

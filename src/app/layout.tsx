@@ -10,8 +10,6 @@ export const metadata: Metadata = {
   description: "Abiso IVC",
 };
 
-
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -25,7 +23,7 @@ export default function RootLayout({
             <Sidebar />
           </main>
           <aside className="lg:col-span-6 rounded-l-3xl bg-white drop-shadow-lg shadow-black">
-            {children}
+              {children}
           </aside>
         </div>
       </body>

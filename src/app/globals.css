@@ -28,3 +28,16 @@
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
+
+.mapboxgl-ctrl-logo {
+  display: none !important;
+}
+
+.mapboxgl-ctrl-attrib {
+  display: none !important;
+}
+
+/* Hide the zoom controls (bottom right corner) */
+.mapboxgl-ctrl-bottom-right {
+  display: none !important;
+}
