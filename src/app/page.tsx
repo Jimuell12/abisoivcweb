@@ -222,10 +222,11 @@ export default function Dashboard() {
       });
       const newMessage = {
         type: 'text',
-        text: "We are notified and on our way! You may or may not see the rescuer's current location due to possible network issues, but rest assured that help is on the way. Please stay calm and, if possible, send a picture or proof of the current situation to assist us in reaching you more efficiently.",
+        text: "🚨 We are notified and on our way! \nYou may or may not see the rescuer's current location due to possible network issues, but rest assured that help is on the way. \n\n🕊️ Please stay calm and, if possible, send a picture or proof of the current situation to assist us in reaching you more efficiently. 📸",
         userType: 'rescuer',
         timestamp: Date.now(),
-      };
+      };      
+      
       push(messageRef, newMessage);
       setModalVisibility((prev) => ({ ...prev, [id]: false }));
     });
