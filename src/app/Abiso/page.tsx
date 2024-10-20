@@ -109,7 +109,7 @@ export default function Abiso() {
         <strong>Compose Your Message:</strong> Write the message you want to send to all registered users in the message box provided.
       </li>
       <li className='mb-2'>
-        <strong>Send the Message:</strong> Click the "Send" button to submit your message. The app will handle sending the SMS to all users registered in the system.
+        <strong>Send the Message:</strong> Click the &quot;Send&quot; button to submit your message. The app will handle sending the SMS to all users registered in the system.
       </li>
       <li className='mb-2'>
         <strong>Check for Confirmation:</strong> After sending, you should receive a confirmation indicating whether the message was successfully sent or if there were any issues.

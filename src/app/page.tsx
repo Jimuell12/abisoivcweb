@@ -5,7 +5,7 @@ import lottie from 'lottie-web';
 
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { db } from './firebaseConfig';
-import { equalTo, get, onValue, orderByChild, push, query, ref, set, update } from 'firebase/database';
+import { equalTo, get, onValue, orderByChild, push, query, ref, update } from 'firebase/database';
 
 export default function Dashboard() {
   const mapContainerRef = useRef<HTMLDivElement>(null);
