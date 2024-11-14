@@ -11,7 +11,7 @@ function Sidebar() {
                 <img className='h-16 w-16' src="/images/abiso_logo.png" alt="" />
                 <h1 className='text-xl font-bold text-blue-500'>Abiso IVC</h1>
             </div>
-            <hr className='mx-6 my-4 flex flex-col'/>
+            <hr className='mx-6 my-4 flex flex-col' />
             <div className='mt-4 text-sm px-6 font-semibold flex-col flex justify-between'>
                 <ul className='space-y-1'>
                     <Link href="/" className={`hover:bg-gray-50 hover:text-blue-500 rounded-3xl flex items-center p-4 gap-2 ${pathname === "/" ? "text-blue-500 bg-gray-50" : "text-[#121212]"}`}>
@@ -47,7 +47,7 @@ function Sidebar() {
 
 
                     </Link>
-                    <Link href="Messages" className={`hover:bg-gray-50 hover:text-blue-500 rounded-3xl  flex items-center p-4 gap-2 ${pathname === "/Messages" ? "text-blue-500 bg-gray-50" : "text-[#121212]"}`}>
+                    <Link href="/Messages" className={`hover:bg-gray-50 hover:text-blue-500 rounded-3xl  flex items-center p-4 gap-2 ${pathname === "/Messages" ? "text-blue-500 bg-gray-50" : "text-[#121212]"}`}>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 0 1-.825-.242m9.345-8.334a2.126 2.126 0 0 0-.476-.095 48.64 48.64 0 0 0-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0 0 11.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155" />
                         </svg>
@@ -58,6 +58,16 @@ function Sidebar() {
                         </svg>
 
 
+                    </Link>
+                    <Link href="/History" className={`hover:bg-gray-50 hover:text-blue-500 rounded-3xl  flex items-center p-4 gap-2 ${pathname === "/History" ? "text-blue-500 bg-gray-50" : "text-[#121212]"}`}>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
+                        </svg>
+
+                        <p>History</p>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-4">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25" />
+                        </svg>
                     </Link>
                     <Link href="Reports" className={`hover:bg-gray-50 hover:text-blue-500 rounded-3xl  flex items-center p-4 gap-2 ${pathname === "/Reports" ? "text-blue-500 bg-gray-50" : "text-[#121212]"}`}>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">

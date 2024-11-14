@@ -69,20 +69,20 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (!mapRef.current) return;
-  
+
     const incidentRef = ref(db, 'incidents');
     const pendingIncidentsQuery = query(incidentRef, orderByChild('status'), equalTo('pending'));
-  
+
     const handleIncidents = (snapshot: any) => {
       const newPendingIncidents: any[] = [];
       const currentIncidentIds = new Set<string>();
       const currentRescuerIds = new Set<string>();
-  
+
       snapshot.forEach((child: any) => {
         const incident = child.val();
         const id = child.key;
         const datetime = new Date(incident.timestamp);
-  
+
         newPendingIncidents.push({
           id,
           locationName: incident.locationName,
@@ -93,9 +93,9 @@ export default function Dashboard() {
           longitude: incident.location.longitude,
           ...incident,
         });
-  
+
         currentIncidentIds.add(id);
-  
+
         const rescuers = incident.rescuers;
         if (rescuers) {
           const rescuerIds = Object.keys(rescuers);
@@ -103,15 +103,15 @@ export default function Dashboard() {
             currentRescuerIds.add(rescuerId);
             const rescuer = incident.rescuers[rescuerId];
             const rescuerLocation = rescuer.location;
-  
+
             if (rescuerLocation) {
               const { latitude, longitude } = rescuerLocation;
-  
+
               if (!rescuerMarkers.has(rescuerId)) {
                 const lottieContainer = document.createElement('div');
                 lottieContainer.style.width = '100px';
                 lottieContainer.style.height = '100px';
-  
+
                 lottie.loadAnimation({
                   container: lottieContainer,
                   renderer: 'svg',
@@ -119,11 +119,11 @@ export default function Dashboard() {
                   autoplay: true,
                   path: '/animations/car.json',
                 });
-  
+
                 const marker = new mapboxgl.Marker(lottieContainer)
                   .setLngLat([longitude, latitude])
                   .addTo(mapRef.current!);
-  
+
                 marker.getElement().addEventListener('click', () => {
                   const rescuerRef = ref(db, `users/${rescuerId}`);
                   get(rescuerRef).then((snapshot) => {
@@ -133,7 +133,7 @@ export default function Dashboard() {
                     setSelectedIncident({ rescueType: 'rescuer', ...rescuer, latitude, longitude, name, mobile, locationName });
                   });
                 });
-  
+
                 rescuerMarkers.set(rescuerId, marker);
               } else {
                 const existingMarker = rescuerMarkers.get(rescuerId);
@@ -142,27 +142,27 @@ export default function Dashboard() {
             }
           });
         }
-  
+
         setModalVisibility((prev) => ({ ...prev, [id]: true }));
-  
+
         if (incident.notified) {
           setModalVisibility((prev) => ({ ...prev, [id]: false }));
         }
-  
+
         if (incident.location) {
           const { latitude, longitude } = incident.location;
-  
+
           if (incidentMarkers.has(id)) {
             const existingMarker = incidentMarkers.get(id);
             existingMarker.setLngLat([longitude, latitude]);
-  
+
             console.log(`Marker updated for incident ${incident.id} at ${latitude}, ${longitude}`);
           } else {
             const lottieContainer = document.createElement('div');
             lottieContainer.id = `lottie-${id}`;
             lottieContainer.style.width = '100px';
             lottieContainer.style.height = '100px';
-  
+
             lottie.loadAnimation({
               container: lottieContainer,
               renderer: 'svg',
@@ -170,72 +170,72 @@ export default function Dashboard() {
               autoplay: true,
               path: `/animations/${incident.type}.json`,
             });
-  
+
             const marker = new mapboxgl.Marker(lottieContainer)
               .setLngLat([longitude, latitude])
               .addTo(mapRef.current!);
-  
+
             marker.getElement().addEventListener('click', () => {
               setSelectedIncident({ rescueType: 'incident', ...incident, latitude, longitude });
             });
-  
+
             incidentMarkers.set(id, marker);
           }
         }
       });
-  
+
       incidentMarkers.forEach((marker, id) => {
         if (!currentIncidentIds.has(id)) {
           marker.remove();
           incidentMarkers.delete(id);
         }
       });
-  
+
       rescuerMarkers.forEach((marker, rescuerId) => {
         if (!currentRescuerIds.has(rescuerId)) {
           marker.remove();
           rescuerMarkers.delete(rescuerId);
         }
       });
-  
+
       setPendingIncidents(newPendingIncidents);
     };
-  
+
     const unsubscribe = onValue(pendingIncidentsQuery, handleIncidents);
-  
+
     return () => {
       unsubscribe();
     };
   }, []);
-  
-  
 
-  const handleAcceptIncident = (id: string) => {
-    const incidentRef = ref(db, `incidents/${id}`);
-    const messageRef = ref(db, `incidents/${id}/messages`);
 
-    get(incidentRef).then((snapshot) => {
-      const numberOfRescuers = snapshot.val().numberofRescuer;
-      update(incidentRef, {
-        numberofRescuer: numberOfRescuers + 1,
-        notified: true,
-      });
-      const newMessage = {
-        type: 'text',
-        text: "🚨 We are notified and on our way! \nYou may or may not see the rescuer's current location due to possible network issues, but rest assured that help is on the way. \n\n🕊️ Please stay calm and, if possible, send a picture or proof of the current situation to assist us in reaching you more efficiently. 📸",
-        userType: 'rescuer',
-        timestamp: Date.now(),
-      };      
-      
-      push(messageRef, newMessage);
-      setModalVisibility((prev) => ({ ...prev, [id]: false }));
-    });
 
-  };
+  // const handleAcceptIncident = (id: string) => {
+  //   const incidentRef = ref(db, `incidents/${id}`);
+  //   const messageRef = ref(db, `incidents/${id}/messages`);
 
-  const handleRejectIncident = (id: string) => {
-    setModalVisibility((prev) => ({ ...prev, [id]: false }));
-  };
+  //   get(incidentRef).then((snapshot) => {
+  //     const numberOfRescuers = snapshot.val().numberofRescuer;
+  //     update(incidentRef, {
+  //       numberofRescuer: numberOfRescuers + 1,
+  //       notified: true,
+  //     });
+  //     const newMessage = {
+  //       type: 'text',
+  //       text: "🚨 We are notified and on our way! \nYou may or may not see the rescuer's current location due to possible network issues, but rest assured that help is on the way. \n\n🕊️ Please stay calm and, if possible, send a picture or proof of the current situation to assist us in reaching you more efficiently. 📸",
+  //       userType: 'rescuer',
+  //       timestamp: Date.now(),
+  //     };
+
+  //     push(messageRef, newMessage);
+  //     setModalVisibility((prev) => ({ ...prev, [id]: false }));
+  //   });
+
+  // };
+
+  // const handleRejectIncident = (id: string) => {
+  //   setModalVisibility((prev) => ({ ...prev, [id]: false }));
+  // };
 
   return (
     <>
@@ -274,33 +274,28 @@ export default function Dashboard() {
         </div>
       )}
 
-      {pendingIncidents.map((incident) => (
-        <div key={incident.id}>
-          {modalVisibility[incident.id] && (
-            <div className="modal fixed top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 flex items-center justify-center">
-              <div className="modal-content bg-white p-6 rounded-lg shadow-lg">
-                <h2 className="text-xl font-bold mb-4">Incident Details</h2>
-                <p><strong>Location Name:</strong> {incident.locationName}</p>
-                <p><strong>Date and Time:</strong> {incident.datetime}</p>
-                <p><strong>User Name:</strong> {incident.userName}</p>
-                <p><strong>User Mobile:</strong> {incident.userMobile}</p>
-                <button
-                  onClick={() => handleAcceptIncident(incident.id)}
-                  className="bg-blue-500 text-white px-4 py-2 rounded mr-2"
-                >
-                  Accept
-                </button>
-                <button
-                  onClick={() => handleRejectIncident(incident.id)}
-                  className="bg-red-500 text-white px-4 py-2 rounded"
-                >
-                  Reject
-                </button>
+      <div className='absolute top-6 right-6 bg-white px-4 py-2 rounded-xl'>
+        <h1 className='text-base font-bold'>Pending Incidents</h1>
+        <div className='overflow-y-scroll max-h-56'>
+          {pendingIncidents.map((incident) => (
+            <div className='bg-gray-50 shadow-xl p-2 my-2' key={incident.id}>
+              <div className='flex flex-row items-center gap-2 justify-between'>
+                <p>{incident.locationName}</p>
+                {incident.numberofRescuer > 0 ? (
+                  <p className='text-black/20'>Accepted</p>
+                ) : (
+                  <p className='text-red-500'>No Rescuer</p>
+                )}
               </div>
+                <div className='flex flex-col items-start gap-2'>
+                  <p>{incident.userName} - {incident.userMobile}</p>
+                  <p>{incident.datetime}</p>
+                  <p>Rescuer's ongoing: {incident.numberofRescuer}</p>
+                </div>
             </div>
-          )}
+          ))}
         </div>
-      ))}
+      </div>
 
       <div className='absolute bottom-2 right-2 z-10 flex flex-row gap-2 px-4 py-2 bg-white rounded-3xl'>
         <div className='flex flex-row items-center'>
