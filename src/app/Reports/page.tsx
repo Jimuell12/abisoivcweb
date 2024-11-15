@@ -1,8 +1,14 @@
 'use client'
 import { onValue, ref, set } from 'firebase/database'
 import React, { useEffect, useState } from 'react'
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts'
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ScatterChart, Scatter } from 'recharts'
 import { db } from '../firebaseConfig'
+import Select from 'react-select';
+
+const optionsMonth = ["Select Month", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"].map(month => ({
+  value: month,  // The actual value that will be passed on selection
+  label: month  // The label to be displayed in the dropdown
+}));
 
 
 export default function Settings() {
@@ -14,12 +20,20 @@ export default function Settings() {
   const [selectedDate, setSelectedDate] = useState('');
   const [years, setYears] = useState<string[]>([]);
 
+  const options = years.map(year => ({
+    value: year.toString(),  // The actual value that will be passed on selection
+    label: year.toString()  // The label to be displayed in the dropdown
+  }));
+
+  options.unshift({ value: '', label: 'Select Year' });
+
   useEffect(() => {
     const incidentsRef = ref(db, 'incidents');
 
     const handleIncidents = (snapshot: any) => {
       const incidents: any = [];
       snapshot.forEach((childSnapshot: any) => {
+        if (!childSnapshot.val().timestamp) return;
         incidents.push({
           ...childSnapshot.val(),
           key: childSnapshot.key
@@ -28,7 +42,7 @@ export default function Settings() {
       setIncidentsList(incidents);
 
       const uniqueYears = Array.from(new Set(incidents.map((incident: any) => new Date(incident.timestamp).getFullYear())));
-      uniqueYears.sort((a : any, b : any) => a - b);
+      uniqueYears.sort((a: any, b: any) => a - b);
       setYears(uniqueYears as string[]);
     };
 
@@ -40,16 +54,25 @@ export default function Settings() {
   }, []);
 
   const groupedIncidents = incidentsList.reduce((acc, incident) => {
-    const date = new Date(incident.timestamp).toLocaleDateString('en', { year: 'numeric' });
+    // Format the timestamp to get both year and month (e.g., "2024-10")
+    const date = new Date(incident.timestamp).toLocaleDateString('en', { year: 'numeric', month: '2-digit' }).replace(/\//g, '-');
+
+    // Ensure the type exists in the accumulator
     if (!acc[incident.type]) {
       acc[incident.type] = {};
     }
+
+    // Ensure the month-year exists for that type
     if (!acc[incident.type][date]) {
       acc[incident.type][date] = 0;
     }
+
+    // Increment the count for that month-year under the type
     acc[incident.type][date] += 1;
+
     return acc;
   }, {});
+
 
   const prepareChartData = (groupedData: any) => {
     const chartData: any = {};
@@ -61,12 +84,13 @@ export default function Settings() {
     });
     return chartData;
   };
-  
+
   const chartData: any[] = prepareChartData(groupedIncidents);
 
-  const handleDateSelected = (e: any) => {
-    const date = e.target.value;
-    if(date === '') return;
+  const handleDateSelected = (selectedDate: any) => {
+    const date = selectedDate
+    console.log(date)
+    if (date === '') return;
     setSelectedDate(date);
     const filteredIncidents = incidentsList.filter((incident) => {
       const incidentDate = new Date(incident.timestamp).toLocaleDateString('en', { year: 'numeric' });
@@ -87,8 +111,8 @@ export default function Settings() {
   }
 
   const handleMonthSelected = (e: any) => {
-    const month = e.target.value;
-    if(month === '') return;
+    const month = e;
+    if (month === '') return;
     const year = selectedDate;
     const filteredIncidents = incidentsList.filter((incident) => {
       const incidentMonth = new Date(incident.timestamp).toLocaleDateString('en', { month: 'long' });
@@ -97,7 +121,7 @@ export default function Settings() {
     });
 
     const daily = Object.entries(filteredIncidents).map(([date, incident]) => ({
-      date: new Date(incident.timestamp).toLocaleDateString('en', { month: 'long' ,day: '2-digit' }),
+      date: new Date(incident.timestamp).toLocaleDateString('en', { month: 'long', day: '2-digit' }),
       type: incident.type,
       location: incident.locationName
     }))
@@ -111,55 +135,49 @@ export default function Settings() {
     <div className='p-4 h-screen overflow-y-scroll'>
       <div className='flex flex-row justify-between'>
         <h1 className='text-2xl font-bold'>Incident Reports</h1>
-        <select name="date" id="date" onChange={handleDateSelected}>
-          <option value="">Select Year</option>
-          {years.map((year) => (
-            <option key={year} value={year}>{year}</option>
-          ))}
-        </select>
+        <Select
+          className="w-48"
+          options={options}
+          onChange={(selectedOption) => handleDateSelected(selectedOption?.value || '')}
+          placeholder="Select Year"
+        />
 
 
       </div>
       <div className='grid lg:grid-cols-2 lg:grid-rows-2 p-4 gap-4'>
         {Object.entries(chartData).map(([type, incidents]) => (
-          <div key={type} className='border p-4 rounded-lg shadow-md flex-wrap'>
-            <h2 className='text-xl font-bold mb-2 capitalize'>{type} Incidents</h2>
-            <LineChart
-              width={400}
-              height={200}
-              data={incidents}
-              margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
-            >
-              <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
-              <XAxis dataKey="date" />
-              <YAxis />
-              <Tooltip />
-              <Line type="monotone" dataKey="count" stroke="#8884d8" />
-              <Legend />
-            </LineChart>
-          </div>
+          incidents.length > 0 ? (
+            <div key={type} className='border p-4 rounded-lg shadow-md flex-wrap'>
+              <h2 className='text-xl font-bold mb-2 capitalize'>{type} Incidents</h2>
+              <ScatterChart
+                width={400}
+                height={200}
+                data={incidents}
+                margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
+              >
+                <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
+                <XAxis dataKey="date" />
+                <YAxis />
+                <Tooltip />
+                <Scatter dataKey="count" fill="#8884d8" />
+                <Legend />
+              </ScatterChart>
+            </div>
+          ) : null
         ))}
+
       </div>
 
       {showTable && (
         <div className='fixed top-0 left-0 w-full h-full bg-white p-4 shadow-lg z-10'>
           <div className='flex flex-row justify-between'>
             <button onClick={() => setShowTable(false)} className='mb-4 p-2 bg-red-500 text-white rounded'>Close</button>
-            <select name="date" id="date" onChange={handleMonthSelected}>
-              <option value="">Select Month</option>
-              <option value="January">January</option>
-              <option value="February">February</option>
-              <option value="March">March</option>
-              <option value="April">April</option>
-              <option value="May">May</option>
-              <option value="June">June</option>
-              <option value="July">July</option>
-              <option value="August">August</option>
-              <option value="September">September</option>
-              <option value="October">October</option>
-              <option value="November">November</option>
-              <option value="December">December</option>
-            </select>
+            <Select
+              className="w-48"
+              options={optionsMonth}
+              onChange={(selectedOption) => handleMonthSelected(selectedOption?.value || '')}
+              placeholder="Select Month"
+            />
           </div>
           <h2 className='text-xl font-bold mb-2'>Monthly Incident Counts</h2>
           <table className='min-w-full'>

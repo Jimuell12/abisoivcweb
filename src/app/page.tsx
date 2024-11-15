@@ -290,7 +290,7 @@ export default function Dashboard() {
                 <div className='flex flex-col items-start gap-2'>
                   <p>{incident.userName} - {incident.userMobile}</p>
                   <p>{incident.datetime}</p>
-                  <p>Rescuer's ongoing: {incident.numberofRescuer}</p>
+                  <p>Rescuer&apos;s ongoing: {incident.numberofRescuer}</p>
                 </div>
             </div>
           ))}
