@@ -33,7 +33,7 @@ export default function Abiso() {
     const phones = allPhoneNumbers.join(',');
   
     const phoneNumbers = phones.split(',').map(num => num.trim());
-  
+    
     const formattedPhoneNumbers = phoneNumbers.map(num => `+63${num.replace(/^\+63/, '')}`).join(',');
   
     const formData = new URLSearchParams();

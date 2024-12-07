@@ -5,13 +5,17 @@ export async function POST(req) {
 
   try {
     const formData = await req.formData();
-    
+
+    const dataToSend = new URLSearchParams();
+    dataToSend.append('message', formData.get('message'));
+    dataToSend.append('phoneno', formData.get('phoneno'));
+
     const response = await fetch(url, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
-      body: formData.toString(),
+      body: dataToSend.toString(),
     });
 
     const data = await response.json();
