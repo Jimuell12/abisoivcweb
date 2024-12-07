@@ -94,6 +94,8 @@ export default function Dashboard() {
           const id = child.key;
           const datetime = new Date(incident.timestamp);
 
+          if(!incident.location) return;
+
           newIncidents.push({
             id,
             locationName: incident.locationName,

@@ -131,6 +131,13 @@ export default function Settings() {
     setShowTable2(true);
   }
 
+  const handlePrint = () => {
+  
+    // Trigger the print dialog
+    window.print();
+  };
+  
+
   return (
     <div className='p-4 h-screen overflow-y-scroll'>
       <div className='flex flex-row justify-between'>
@@ -170,10 +177,11 @@ export default function Settings() {
 
       {showTable && (
         <div className='fixed top-0 left-0 w-full h-full bg-white p-4 shadow-lg z-10'>
-          <div className='flex flex-row justify-between'>
-            <button onClick={() => setShowTable(false)} className='mb-4 p-2 bg-red-500 text-white rounded'>Close</button>
+          <div className='flex flex-row justify-between items-center'>
+            <button onClick={() => setShowTable(false)} className='print:hidden mb-4 p-2 bg-red-500 text-white rounded'>Close</button>
+            <button onClick={handlePrint} className='bg-blue-500 rounded-md px-6 text-white py-2 print:hidden'>Print</button>
             <Select
-              className="w-48"
+              className="w-48 print:hidden"
               options={optionsMonth}
               onChange={(selectedOption) => handleMonthSelected(selectedOption?.value || '')}
               placeholder="Select Month"
@@ -183,27 +191,27 @@ export default function Settings() {
           <table className='min-w-full'>
             <thead className='bg-gray-50 whitespace-nowrap rounded-xl"'>
               <tr>
-                <th className='p-4 text-left text-sm font-bold text-gray-500'>Disaster</th>
-                <th className='p-4 text-left text-sm font-bold text-gray-500'>Jan</th>
-                <th className='p-4 text-left text-sm font-bold text-gray-500'>Feb</th>
-                <th className='p-4 text-left text-sm font-bold text-gray-500'>Mar</th>
-                <th className='p-4 text-left text-sm font-bold text-gray-500'>Apr</th>
-                <th className='p-4 text-left text-sm font-bold text-gray-500'>May</th>
-                <th className='p-4 text-left text-sm font-bold text-gray-500'>Jun</th>
-                <th className='p-4 text-left text-sm font-bold text-gray-500'>Jul</th>
-                <th className='p-4 text-left text-sm font-bold text-gray-500'>Aug</th>
-                <th className='p-4 text-left text-sm font-bold text-gray-500'>Sep</th>
-                <th className='p-4 text-left text-sm font-bold text-gray-500'>Oct</th>
-                <th className='p-4 text-left text-sm font-bold text-gray-500'>Nov</th>
-                <th className='p-4 text-left text-sm font-bold text-gray-500'>Dec</th>
+                <th className='p-4 text-left text-sm font-bold text-gray-500 border-black border'>Disaster</th>
+                <th className='p-4 text-left text-sm font-bold text-gray-500 border-black border'>Jan</th>
+                <th className='p-4 text-left text-sm font-bold text-gray-500 border-black border'>Feb</th>
+                <th className='p-4 text-left text-sm font-bold text-gray-500 border-black border'>Mar</th>
+                <th className='p-4 text-left text-sm font-bold text-gray-500 border-black border'>Apr</th>
+                <th className='p-4 text-left text-sm font-bold text-gray-500 border-black border'>May</th>
+                <th className='p-4 text-left text-sm font-bold text-gray-500 border-black border'>Jun</th>
+                <th className='p-4 text-left text-sm font-bold text-gray-500 border-black border'>Jul</th>
+                <th className='p-4 text-left text-sm font-bold text-gray-500 border-black border'>Aug</th>
+                <th className='p-4 text-left text-sm font-bold text-gray-500 border-black border'>Sep</th>
+                <th className='p-4 text-left text-sm font-bold text-gray-500 border-black border'>Oct</th>
+                <th className='p-4 text-left text-sm font-bold text-gray-500 border-black border'>Nov</th>
+                <th className='p-4 text-left text-sm font-bold text-gray-500 border-black border'>Dec</th>
               </tr>
             </thead>
             <tbody className="whitespace-nowrap">
               {monthlyIncidents.map(([type, counts]) => (
                 <tr className='hover:bg-gray-50' key={type}>
-                  <th className="p-4 text-sm text-gray-500 text-left">{type}</th>
+                  <th className="p-4 text-sm text-gray-500 text-left border-black border">{type}</th>
                   {Object.values(counts).map((count, index) => (
-                    <th className="p-4 text-sm text-gray-500 text-left" key={index}>{String(count)}</th>
+                    <th className="p-4 text-sm text-gray-500 text-left border-black border" key={index}>{String(count)}</th>
                   ))}
                 </tr>
               ))}
@@ -213,25 +221,28 @@ export default function Settings() {
       )}
 
       {showTable2 && (
-        <div className='fixed top-0 left-0 w-full h-full bg-white p-4 shadow-lg z-10'>
-          <div className='flex flex-row justify-between'>
+        <div className='fixed top-0 left-0 w-full h-full print:overflow-visible overflow-scroll bg-white p-4 shadow-lg z-10'>
+          <div className='flex flex-row justify-between print:hidden'>
             <button onClick={() => setShowTable2(false)} className='mb-4 p-2 bg-red-500 text-white rounded'>Close</button>
           </div>
-          <h2 className='text-xl font-bold mb-2'>Daily Incident Counts</h2>
-          <table className='min-w-full'>
-            <thead className='bg-gray-50 whitespace-nowrap rounded-xl"'>
+          <div className='flex flex-row justify-between items-center my-5'>
+            <h2 className='text-xl font-bold mb-2'>Daily Incident Counts</h2>
+            <button onClick={handlePrint} className='bg-blue-500 rounded-md px-6 text-white py-2 print:hidden'>Print</button>
+          </div>
+          <table className='min-w-full overflow-scroll'>
+            <thead className='bg-gray-50 whitespace-nowrap rounded-xl'>
               <tr>
-                <th className='p-4 text-left text-sm font-bold text-gray-500'>Date</th>
-                <th className='p-4 text-left text-sm font-bold text-gray-500'>Incident</th>
-                <th className='p-4 text-center text-sm font-bold text-gray-500'>Location</th>
+                <th className='p-4 text-left text-sm font-bold text-gray-500 border-black border'>Date</th>
+                <th className='p-4 text-left text-sm font-bold text-gray-500 border-black border'>Incident</th>
+                <th className='p-4 text-center text-sm font-bold text-gray-500 border-black border'>Location</th>
               </tr>
             </thead>
             <tbody className="whitespace-nowrap">
               {dailyIncidents.map((incident) => (
                 <tr className='hover:bg-gray-50' key={incident.date}>
-                  <th className="p-4 text-sm text-gray-500 text-left">{incident.date}</th>
-                  <th className="p-4 text-sm text-gray-500 text-left">{incident.type}</th>
-                  <th className="p-4 text-sm text-gray-500 text-center">{incident.location}</th>
+                  <th className="p-4 text-sm text-gray-500 text-left border-black border">{incident.date}</th>
+                  <th className="p-4 text-sm text-gray-500 text-left border-black border">{incident.type}</th>
+                  <th className="p-4 text-sm text-gray-500 text-center border-black border">{incident.location}</th>
                 </tr>
               ))}
             </tbody>

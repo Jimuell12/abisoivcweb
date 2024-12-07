@@ -2,6 +2,7 @@
   "name": "abisoivcweb",
   "version": "0.1.0",
   "private": true,
+  "proxy": "https://spider-holy-crow.ngrok-free.app",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -21,6 +22,7 @@
   },
   "devDependencies": {
     "@types/node": "^20",
+    "@types/node-fetch": "^2.6.12",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",
